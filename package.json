@@ -1,0 +1,55 @@
+{
+  "name": "@merajforks/react-text-loop",
+  "description": "Animated Text Loop",
+  "version": "0.1.0-alpha.1",
+  "license": "MIT",
+  "private": false,
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "homepage": "https://github.com/merajsahebdar/react-text-loop",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:merajsahebdar/react-text-loop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/merajsahebdar/react-text-loop/issues"
+  },
+  "author": {
+    "name": "Meraj Sahebdar",
+    "email": "itsdrewstiles@gmail.com"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "clean": "rimraf ./lib",
+    "build": "yarn clean && yarn build:cjs && yarn build:esm",
+    "build:cjs": "tsc --build tsconfig.cjs.build.json",
+    "build:esm": "tsc --build tsconfig.esm.build.json",
+    "lint": "eslint --fix \"src/**/*.{ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\""
+  },
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1",
+    "@types/raf": "^3.4.0",
+    "@types/react": "^17",
+    "@types/react-motion": "^0.0.32",
+    "eslint": "^8.11.0",
+    "eslint-config-react-app": "^7.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.5",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.6.2"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0"
+  },
+  "dependencies": {
+    "raf": "^3.4.1",
+    "react-spring": "^9.4.4"
+  }
+}
