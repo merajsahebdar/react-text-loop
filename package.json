@@ -21,7 +21,7 @@
   "scripts": {
     "prepare": "husky install",
     "clean": "rimraf ./lib",
-    "build": "yarn clean && yarn build:cjs && yarn build:esm",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm",
     "build:cjs": "tsc --build tsconfig.cjs.build.json",
     "build:esm": "tsc --build tsconfig.esm.build.json",
     "lint": "eslint --fix \"src/**/*.{ts,tsx}\"",
