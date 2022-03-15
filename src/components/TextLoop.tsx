@@ -1,3 +1,4 @@
+import { animated, config, useTransition } from '@react-spring/web';
 import {
   forwardRef,
   Reducer,
@@ -6,7 +7,6 @@ import {
   useReducer,
   useRef,
 } from 'react';
-import { animated, config, useTransition } from 'react-spring';
 import { useTimeout } from '../hooks/timeout';
 
 type SpanProps = React.DetailedHTMLProps<
