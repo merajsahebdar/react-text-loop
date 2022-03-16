@@ -1,6 +1,7 @@
-import { animated, config, useTransition } from '@react-spring/web';
+import { animated, SpringConfig, useTransition } from '@react-spring/web';
 import {
   forwardRef,
+  ReactElement,
   Reducer,
   useCallback,
   useEffect,
@@ -14,14 +15,17 @@ type SpanProps = React.DetailedHTMLProps<
   HTMLSpanElement
 >;
 
+type LoopElement = ReactElement | string;
+
 export type TextLoopProps = {
-  texts: string[];
+  elements: LoopElement[];
   interval: number;
+  springConfig?: SpringConfig;
 } & Omit<SpanProps, 'children'>;
 
 type State = {
-  texts: string[];
-  current: string;
+  elements: LoopElement[];
+  current: LoopElement;
 };
 
 type Action = {
@@ -31,9 +35,10 @@ type Action = {
 export const TextLoop = forwardRef<HTMLSpanElement, TextLoopProps>(
   function TextLoop(props, ref) {
     const {
-      texts: [next, ...rest],
+      elements: [next, ...rest],
       interval,
       style: rootReceivedStyle,
+      springConfig,
       ...rootProps
     } = props;
 
@@ -44,41 +49,32 @@ export const TextLoop = forwardRef<HTMLSpanElement, TextLoopProps>(
 
     const [{ current }, dispatch] = useReducer<Reducer<State, Action>>(
       (prev, act) => {
-        if (act.type === 'next') {
-          const [next, ...rest] = prev.texts;
-          return {
-            texts: [...rest, next],
-            current: next,
-          };
+        switch (act.type) {
+          case 'next':
+            const [next, ...rest] = prev.elements;
+            return {
+              elements: [...rest, next],
+              current: next,
+            };
         }
-
-        return prev;
       },
       {
-        texts: [...rest, next],
+        elements: [...rest, next],
         current: next,
       }
     );
 
-    const getTextBounding = useCallback(
-      () =>
-        textContainerRef.current
-          ? textContainerRef.current.getBoundingClientRect()
-          : { width: 0, height: 0 },
-      []
-    );
-
     const fixParentDimensions = useCallback(() => {
-      const { width } = getTextBounding();
-      if (containerRef.current) {
+      if (containerRef.current && textContainerRef.current) {
+        const { width } = textContainerRef.current.getBoundingClientRect();
         containerRef.current.style.width = `${width}px`;
       }
-    }, [getTextBounding]);
+    }, []);
 
     const transitions = useTransition(current, {
       from: () => ({
         opacity: 0,
-        translateY: '-100%',
+        translateY: '-50%',
       }),
       enter: () => ({
         opacity: 1,
@@ -86,12 +82,12 @@ export const TextLoop = forwardRef<HTMLSpanElement, TextLoopProps>(
       }),
       leave: () => ({
         opacity: 0,
-        translateY: '100%',
+        translateY: '50%',
       }),
       onStart: () => {
         fixParentDimensions();
       },
-      config: config.wobbly,
+      config: springConfig,
     });
 
     const tick = useCallback(() => {

@@ -1,31 +1,17 @@
-import raf from 'raf';
+import { Timeout, raf } from '@react-spring/rafz';
 import { useCallback, useRef } from 'react';
 
-function getTime() {
-  return new Date().getTime();
-}
-
 export function useTimeout() {
-  const ref = useRef(0);
+  const ref = useRef<Timeout>();
 
-  const requestTimeout = useCallback((fn: () => void, delay: number) => {
-    const startTime = getTime();
-
-    const tick = () => {
-      const currentTime = getTime();
-
-      if (delay <= currentTime - startTime) {
-        fn();
-      } else {
-        ref.current = raf(tick);
-      }
-    };
-
-    ref.current = raf(tick);
+  const requestTimeout = useCallback((fn: () => void, ms: number) => {
+    ref.current = raf.setTimeout(fn, ms);
   }, []);
 
   const removeTimeout = useCallback(() => {
-    raf.cancel(ref.current);
+    if (ref.current) {
+      ref.current.cancel();
+    }
   }, []);
 
   return {
